@@ -1,0 +1,38 @@
+PRACTICAL 7: FILE TRANSFER USING TWO UNNAMED PIPES
+
+FILE TO OPEN
+  07-pipes/pipe_file.c
+
+RUN
+  bash run.sh 7 --demo
+  bash run.sh pipe_file samples/sample.txt
+  bash run.sh 7
+
+DIRECT COMMANDS
+  mkdir -p build
+  cc 07-pipes/pipe_file.c -o build/pipe_file
+  ./build/pipe_file samples/sample.txt
+
+WHAT TO SAY
+  pipe creates two file descriptors: index 0 reads, index 1 writes.
+  One ordinary POSIX pipe carries data in one direction.
+  The program creates two pipes BEFORE fork so the child inherits them.
+  The parent sends a filename on the request pipe. The child opens that
+  file and streams its contents back on the response pipe.
+  Each process closes the endpoints it does not use. When the child closes
+  its writer, the parent sees EOF and finishes. waitpid reaps the child.
+
+EXPECTED SAMPLE OUTPUT
+  Contents of File:
+  Operating System Laboratory
+  IPC using Pipes
+
+REMEMBER
+  The pair of pipes supports communication in both directions.
+  A named FIFO has a filesystem path; these unnamed pipes use inherited
+  file descriptors between the related parent and child.
+  Close unused writers, or a reader may wait forever instead of seeing EOF.
+  The code loops over reads and writes because an I/O call can transfer
+  fewer bytes than requested. It does not assume the whole file fits in RAM.
+  Quote filenames with spaces, for example:
+    bash run.sh pipe_file "my file.txt"

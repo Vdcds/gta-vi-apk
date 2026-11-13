@@ -4,6 +4,16 @@ Operating systems lab programs from the eight attached practical files. Includes
 
 The original text files are preserved unchanged in [`originals/`](originals/). Runnable source files are in the numbered practical folders.
 
+## Start on Windows
+
+Download the ZIP from **Code > Download ZIP**, extract it, then double-click `WINDOWS-START.cmd`.
+
+The launcher copies the project to your Windows Desktop, opens the Desktop copy in VS Code, and starts a practical menu through WSL Ubuntu. Choose an ID to open its source and `.txt` cheat sheet, then press Enter to run with sample input. Existing Desktop copies are kept. A project already on the Desktop runs from that folder.
+
+Install WSL Ubuntu, its C compiler, and VS Code once using [`cheats/00-WINDOWS-START.txt`](cheats/00-WINDOWS-START.txt). In VS Code, **Ctrl+Shift+B** also opens the menu in the integrated terminal. The run menu and generated programs use the Desktop copy.
+
+Each practical has a [plain-text cheat sheet](cheats/) with direct commands, an explanation, expected output, and viva notes. Source files, headers, and sample inputs stay together so every program can compile after copying.
+
 ## Get the programs
 
 ```bash
@@ -138,7 +148,7 @@ make
 make test
 ```
 
-The checks run all 13 programs and check process states, synchronization output, safe and unsafe resource states, FIFO counts, large file transfer, and disk seek sequences. GitHub Actions runs the same checks on Linux and macOS.
+The checks run all 13 programs and check process states, synchronization output, safe and unsafe resource states, FIFO counts, large file transfer, disk seek sequences, and the practical menu. GitHub Actions runs these checks on Linux and macOS, and checks the Desktop copy logic and PowerShell syntax on Windows.
 
 To remove compiled programs and generated FIFO results:
 

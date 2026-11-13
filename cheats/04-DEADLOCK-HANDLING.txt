@@ -1,0 +1,36 @@
+PRACTICAL 4: DINING PHILOSOPHERS
+
+FILE TO OPEN
+  04-deadlock-handling/dining_philosophers.c
+
+RUN
+  bash run.sh 4
+
+DIRECT COMMANDS
+  mkdir -p build
+  cc 04-deadlock-handling/dining_philosophers.c -o build/dining_philosophers -pthread
+  ./build/dining_philosophers
+
+WHAT TO SAY
+  Five philosophers are threads. Each needs two adjacent forks to eat.
+  Fork i is the left fork. Fork (i + 1) % 5 is the right fork.
+  Each fork has a semaphore initialized to 1.
+  A room semaphore starts at 4, so at most four philosophers can compete
+  for forks at once. This prevents all five from holding one fork while
+  waiting for the next fork in a circular chain.
+
+TRACE ONE MEAL
+  Think, wait(room), take left fork, take right fork, eat, release both
+  forks, then post(room). Each philosopher repeats this for three meals.
+
+EXPECTED OUTPUT
+  Thinking, fork pickup, eating, and release messages.
+  Every philosopher eats three meals, then the program exits.
+  Thread scheduling changes the order of the messages.
+
+VIVA NOTES
+  The four necessary deadlock conditions are mutual exclusion, hold and
+  wait, no preemption, and circular wait. They must all hold for deadlock.
+  The N-1 room limit prevents this circular-wait deadlock.
+  Deadlock prevention does not by itself guarantee fairness or no starvation.
+  The original text loops forever. This runnable version has a finite demo.

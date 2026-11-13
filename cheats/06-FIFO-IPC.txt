@@ -1,0 +1,46 @@
+PRACTICAL 6: IPC USING TWO NAMED PIPES
+
+FILES TO OPEN
+  06-ipc/process1.c
+  06-ipc/process2.c
+  06-ipc/run_fifo.sh starts both processes and cleans up the named pipes.
+
+RUN BOTH PROCESSES WITH ONE COMMAND
+  bash run.sh 6 --demo
+  bash run.sh 6
+
+DIRECT COMMANDS
+  mkdir -p build
+  cc 06-ipc/process1.c -o build/process1
+  cc 06-ipc/process2.c -o build/process2
+  bash 06-ipc/run_fifo.sh
+
+WHAT TO SAY
+  A FIFO is a named pipe in the filesystem. Separate processes can open it
+  by its path. This example uses fifo1 for the sentence and fifo2 for results.
+  Process 1 reads a sentence and sends it through fifo1.
+  Process 2 reads it, counts characters, words, and lines, writes result.txt,
+  and sends the counts back through fifo2. Process 1 displays the reply.
+  Closing the writer lets the reader detect the end of the message.
+
+EXPECTED SAMPLE RESULT
+  Input: Operating Systems laboratory experiment
+  Number of Characters = 39
+  Number of Words = 4
+  Number of Lines = 1
+
+READ THE SAVED RESULT
+  cat build/fifo-result.txt
+
+REMEMBER
+  Two FIFOs provide communication in both directions.
+  An open can block until the other process opens the opposite endpoint.
+  The launcher creates the FIFOs BEFORE starting either process.
+  It uses a temporary directory, then copies the result into build and
+  removes the FIFOs. Repeated runs do not leave stale pipe files.
+  The input sentence is at most 499 characters. Its final Enter newline
+  is removed. Characters are counted as bytes, and spaces count too.
+  Words start when a non-whitespace character follows whitespace or starts
+  the message. An empty message has zero characters, words, and lines.
+
+For a two-terminal manual demonstration, follow COMMANDS.md, section 6.

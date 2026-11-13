@@ -1,0 +1,78 @@
+WINDOWS: COPY TO DESKTOP, OPEN VS CODE, RUN
+
+ONE-TIME SETUP
+
+1. Open PowerShell as Administrator and run:
+   wsl --install -d Ubuntu
+
+2. Restart Windows if prompted. Open Ubuntu from the Start menu and finish
+   creating your Linux username and password. In Ubuntu, run:
+   sudo apt update
+   sudo apt install -y build-essential
+
+3. Install VS Code on WINDOWS from https://code.visualstudio.com/
+   Select "Add to PATH" during installation. Open a new PowerShell and run:
+   code --install-extension ms-vscode-remote.remote-wsl
+
+EACH TIME YOU WANT TO RUN A PRACTICAL
+
+1. Download the repository ZIP from GitHub (Code > Download ZIP), then
+   right-click it and select Extract All. Open the extracted project folder.
+   Or use your existing clone.
+
+2. Double-click WINDOWS-START.cmd.
+   It copies the full project, including source files, headers, samples, and
+   these text notes, to your Windows Desktop BEFORE opening or running it.
+   The usual folder is Desktop\gta-vi-apk. OneDrive Desktop paths work too.
+   Existing Desktop copies are kept. A new copy gets a unique name.
+   If the project is already directly on the Desktop, it uses that copy.
+   Generated binaries, the local address book, and .git are not copied.
+
+3. VS Code opens the Desktop copy. Review and trust your downloaded project
+   if VS Code asks. The launcher shows the practical menu in its terminal.
+
+4. Enter an ID such as 5. The matching source file and cheat sheet open in
+   VS Code when the WSL code command is available. The cheat also prints
+   in the terminal. Press Enter for sample input, or type n for your own.
+   The program compiles and runs from the Desktop copy.
+
+5. After the output, press Enter to choose another practical. Type q to exit.
+
+RUN INSIDE VS CODE'S TERMINAL
+
+Press Ctrl+Shift+B and select or accept the installed WSL distribution name.
+The same menu runs in VS Code's integrated terminal. If another launcher
+menu is open, quit it with q before running a second copy.
+
+To type individual commands, use Terminal > New Terminal in a WSL window.
+If VS Code opened a regular Windows window, press Ctrl+Shift+P and choose
+"WSL: Reopen Folder in WSL" first. Keep the project folder open.
+Then, for example:
+   bash run.sh 5 --demo
+
+The .c files use Linux features such as fork, pthreads, and FIFOs. Run them
+with the Ubuntu compiler in WSL. A regular Windows C compiler cannot run
+all these examples. The programs remain ordinary editable source files.
+
+IF SOMETHING IS MISSING
+
+- "Ubuntu" is not the name of your installed distribution:
+  In PowerShell, run:
+    wsl --list --quiet
+  Then, from the extracted project folder, use the exact displayed name:
+    .\WINDOWS-START.cmd -Distribution Ubuntu-24.04
+  Enter the same name if the VS Code task asks for it.
+
+- Missing compiler: run the apt commands above inside Ubuntu.
+- Missing VS Code: install it on Windows, then restart the launcher.
+- "code" is missing in Ubuntu: install the WSL extension, reopen the folder
+  in WSL, and check that Windows PATH sharing is enabled in your WSL setup.
+  You can still open the .c file and its cheats/*.txt manually in VS Code.
+- Run scripts with "bash run.sh ..." if a ZIP extraction lost executable bits.
+- Save shell files with LF line endings. VS Code settings in this repo use LF.
+- Do not run commands inside the ZIP preview. Extract the entire project.
+
+Official setup references:
+https://learn.microsoft.com/en-us/windows/wsl/install
+https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-vscode
+https://code.visualstudio.com/docs/remote/wsl

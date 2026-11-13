@@ -9,3 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: make test
+  windows-launcher:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Desktop copying and PowerShell syntax
+        shell: powershell
+        run: .\scripts\check-windows.ps1

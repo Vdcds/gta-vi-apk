@@ -1,0 +1,31 @@
+PRACTICAL 1: BASH ADDRESS BOOK
+
+FILE TO OPEN
+  01-shell/address_book.sh
+
+RUN (Ubuntu / WSL terminal, from the project folder)
+  bash run.sh 1
+  bash run.sh 1 --demo
+
+DIRECT COMMAND
+  bash 01-shell/address_book.sh
+
+WHAT TO SAY
+  This menu-driven Bash script creates, views, inserts, deletes, and modifies
+  address-book records. Each line stores name|phone|email in addressbook.txt.
+  A while loop repeats the menu. A case statement selects the operation.
+  read collects user input. printf writes a record. awk compares the first
+  field with the requested name, ignoring case. It matches the name literally.
+  Delete and modify write a temporary file, then replace the original file.
+
+DEMONSTRATE
+  Choose 1 to create the book, then 3 to add Alice, a phone number, and email.
+  Choose 2 to display it, 5 to modify it, 4 to delete it, and 6 to exit.
+  The --demo command creates a temporary book, inserts Alice, displays the
+  record, and exits. It does not change your saved addressbook.txt.
+
+REMEMBER
+  | separates fields, so field values cannot contain |.
+  Quote variables to keep spaces in filenames and names together.
+  >> appends. > replaces a file's contents. The script exits cleanly at EOF.
+  Create uses touch, so creating an existing book does not erase its records.

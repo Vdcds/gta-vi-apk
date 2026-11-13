@@ -1,0 +1,57 @@
+PRACTICAL 2: PROCESS MANAGEMENT
+
+A. PARENT AND CHILD SORTING
+  Open: 02-process/fork_sort.c
+  Run:  bash run.sh 2a --demo
+  Own input: bash run.sh 2a
+
+  Direct commands:
+    mkdir -p build
+    cc 02-process/fork_sort.c -o build/fork_sort
+    ./build/fork_sort < samples/sort.in
+
+  Explain:
+    fork creates a child process. It returns 0 in the child, the child's PID
+    in the parent, and -1 on failure. Each process has its own copy of the
+    array. Both use bubble sort. The parent calls waitpid before printing,
+    so the child's sorted result appears first. getpid gives the current
+    process ID. getppid gives the parent process ID.
+
+  Sample: count 5, values 40 10 50 20 30.
+  Result: both processes print 10 20 30 40 50.
+  PIDs change each time. Both sorts happen in separate processes.
+
+B. ZOMBIE
+  Open: 02-process/zombie.c
+  Run:  bash run.sh 2b
+
+  Direct commands:
+    cc 02-process/zombie.c -o build/zombie
+    ./build/zombie
+
+  Explain:
+    The child exits, but the parent waits five seconds before waitpid.
+    During that interval, the child's exit status remains in a process-table
+    entry. This is a zombie. The process is no longer executing.
+
+  During the pause, run the printed ps command in a SECOND Ubuntu terminal.
+  Look for Z in STAT. waitpid then collects the exit status and removes it.
+  Do not type a new command into the terminal while the demo is still running.
+
+C. ORPHAN
+  Open: 02-process/orphan.c
+  Run:  bash run.sh 2c
+
+  Direct commands:
+    cc 02-process/orphan.c -o build/orphan
+    ./build/orphan
+
+  Explain:
+    The parent exits while the child is still alive. After two seconds, the
+    child prints its original and current parent PIDs. A system process or
+    subreaper adopts it. In WSL or containers, the new PID need not be 1.
+    The shell prompt can return before the child finishes printing.
+
+REMEMBER THE DIFFERENCE
+  Zombie: the child has exited and its parent has not collected its status.
+  Orphan: the child is alive and its original parent has exited.

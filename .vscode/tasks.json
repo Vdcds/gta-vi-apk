@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run practical menu",
+      "type": "process",
+      "command": "bash",
+      "args": ["windows/menu.sh"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "windows": {
+        "command": "wsl.exe",
+        "args": ["--distribution", "${input:wslDistro}", "--cd", "${workspaceFolder}", "--exec", "bash", "windows/menu.sh"]
+      },
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "focus": true, "panel": "dedicated" },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "wslDistro",
+      "type": "promptString",
+      "description": "Installed WSL distribution name (from wsl --list --quiet)",
+      "default": "Ubuntu"
+    }
+  ]
+}

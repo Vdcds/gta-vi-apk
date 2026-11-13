@@ -1,0 +1,60 @@
+PRACTICAL 8: DISK SCHEDULING
+
+FILES TO OPEN
+  08-disk/sstf.c
+  08-disk/scan.c
+  08-disk/clook.c
+  08-disk/disk.h contains shared input, sorting, and seek-output helpers.
+
+RUN
+  bash run.sh 8a --demo
+  bash run.sh 8b --demo
+  bash run.sh 8c --demo
+  Omit --demo to enter your own input.
+
+DIRECT COMMANDS
+  mkdir -p build
+  cc 08-disk/sstf.c -o build/sstf
+  cc 08-disk/scan.c -o build/scan
+  cc 08-disk/clook.c -o build/clook
+  ./build/sstf < samples/disk.in
+  ./build/scan < samples/disk.in
+  ./build/clook < samples/disk.in
+
+INPUT ORDER
+  Request count, request queue, initial head position.
+  Sample count: 9
+  Queue: 55 58 39 18 90 160 150 38 184
+  Head: 100
+  This implementation has 200 tracks numbered 0 through 199.
+
+A. SSTF: SHORTEST SEEK TIME FIRST
+  Choose the nearest unserved request to the current head, then repeat.
+  Equal-distance ties use the earlier request in the input queue.
+  Sequence: 100 -> 90 -> 58 -> 55 -> 39 -> 38 -> 18 -> 150 -> 160 -> 184
+  Total head movement: 248 tracks. Average: 27.56 tracks per request.
+  A distant request can starve if nearer requests keep arriving in a live
+  system. This example has a finite, fixed request queue.
+
+B. SCAN: ELEVATOR ALGORITHM
+  Start toward higher tracks, serve them in order, reach track 199, then
+  reverse to serve the requests below the ORIGINAL head in descending order.
+  Sequence: 100 -> 150 -> 160 -> 184 -> 199 -> 90 -> 58 -> 55 -> 39 -> 38 -> 18
+  Total head movement: 280 tracks. Average: 31.11 tracks per request.
+  This demo counts the upward trip to track 199 even if all requests were
+  served before that boundary, then ends after the lower requests finish.
+  Do not serve the upper requests again on the downward sweep.
+
+C. C-LOOK: CIRCULAR LOOK
+  Serve higher requests in ascending order. Wrap to the lowest pending
+  request, then continue upward. Stop at the last request, not a disk edge.
+  Sequence: 100 -> 150 -> 160 -> 184 -> 18 -> 38 -> 39 -> 55 -> 58 -> 90
+  Total head movement: 322 tracks. Average: 35.78 tracks per request.
+  This implementation COUNTS the wrap distance from 184 to 18.
+
+VIVA NOTES
+  Seek distance for a move is abs(next_track - current_track).
+  Total is the sum of those distances. Average is total / request count.
+  "Total Seek Operations" in the output means track movement, not the number
+  of requests. These algorithms simulate head movement; they do not access
+  your real disk or measure elapsed I/O time.

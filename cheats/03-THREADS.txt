@@ -1,0 +1,37 @@
+PRACTICAL 3: PRODUCER AND CONSUMER
+
+FILE TO OPEN
+  03-threads/producer_consumer.c
+  common/sync.h contains the semaphore helpers.
+
+RUN
+  bash run.sh 3
+
+DIRECT COMMANDS
+  mkdir -p build
+  cc 03-threads/producer_consumer.c -o build/producer_consumer -pthread
+  ./build/producer_consumer
+
+WHAT TO SAY
+  Two threads share a circular buffer of size 5. The producer writes ten
+  items, 10 through 100. The consumer removes those items in the same order.
+  empty counts free slots and starts at 5. full counts filled slots and
+  starts at 0. A mutex protects the shared array and buffer positions.
+
+TRACE ONE ITEM
+  Producer: wait(empty), lock mutex, insert item, advance in, unlock, post(full).
+  Consumer: wait(full), lock mutex, remove item, advance out, unlock, post(empty).
+  The next position is (position + 1) % BUFFER_SIZE, so it wraps to zero.
+
+EXPECTED OUTPUT
+  Ten "Producer produced" lines and ten "Consumer consumed" lines.
+  The consumed values are 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.
+  Producer and consumer messages may interleave differently on each run.
+
+REMEMBER
+  Semaphore wait decrements a positive count, or blocks when the count is 0.
+  Semaphore post increments the count and can wake a waiting thread.
+  The mutex permits only one thread at a time inside the critical section.
+  Waiting for empty/full happens BEFORE locking the mutex, so a blocked
+  thread does not hold the buffer mutex while the other needs to use it.
+  pthread_join waits for each thread to finish. -pthread enables thread support.

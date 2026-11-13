@@ -1,0 +1,39 @@
+PRACTICAL 5: BANKER'S SAFETY ALGORITHM
+
+FILE TO OPEN
+  05-deadlock-avoidance/bankers.c
+
+RUN
+  bash run.sh 5 --demo
+  bash run.sh 5
+
+DIRECT COMMANDS
+  mkdir -p build
+  cc 05-deadlock-avoidance/bankers.c -o build/bankers
+  ./build/bankers < samples/bankers.in
+
+INPUT ORDER
+  Number of processes, number of resource types, allocation matrix,
+  maximum matrix, then the available-resource vector.
+  Matrix rows are processes. Columns are resource types.
+  The complete sample is in samples/bankers.in.
+
+WHAT TO SAY
+  This program checks whether a supplied resource-allocation state is safe.
+  Need = Maximum - Allocation. Work initially equals Available.
+  Find an unfinished process whose Need is at most Work for EVERY resource.
+  Pretend it finishes, add its Allocation back to Work, and record its ID.
+  Repeat. If all processes can finish, the order is a safe sequence.
+  If unfinished processes remain and none can proceed, the state is unsafe.
+
+EXPECTED SAMPLE RESULT
+  System is in Safe State.
+  Safe Sequence: P0 -> P2 -> P3 -> P4 -> P1
+
+VIVA NOTES
+  Safe means at least one completion order exists under the maximum claims.
+  Unsafe does not necessarily mean the processes are already deadlocked.
+  Several safe sequences can exist; this code checks process IDs in order.
+  Maximum cannot be smaller than Allocation. Resource counts are nonnegative.
+  This example runs the SAFETY check. It does not implement a separate
+  interactive resource-request/grant phase of the full Banker's algorithm.

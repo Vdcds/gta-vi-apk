@@ -177,6 +177,31 @@ def check_disk():
     print("PASS disk scheduling: exact sequences, totals, duplicates, and input bounds")
 
 
+def check_menu():
+    with tempfile.TemporaryDirectory(prefix="oslab-editor-") as directory:
+        fake_code = Path(directory) / "code"
+        fake_code.write_text('#!/usr/bin/env bash\nprintf "%s\\n" "$@" >> "$OSLAB_EDITOR_LOG"\n')
+        fake_code.chmod(0o755)
+        log = Path(directory) / "opened files.txt"
+        environment = dict(os.environ, PATH=directory + os.pathsep + os.environ["PATH"],
+                           OSLAB_EDITOR_LOG=str(log), OSLAB_SKIP_EDITOR="0")
+        output = run("bash", "windows/menu.sh", text="wrong\n5\n\n\n6\n\n\n8b\n\n\nq\n", env=environment)
+        assert "Choose an ID from the list" in output
+        assert "Safe Sequence: P0 -> P2 -> P3 -> P4 -> P1" in output
+        assert "Number of Characters = 39" in output
+        assert "Total Seek Operations = 280" in output
+        opened = log.read_text()
+        for path in ("05-deadlock-avoidance/bankers.c", "06-ipc/process1.c",
+                     "06-ipc/process2.c", "08-disk/scan.c", "cheats/05-BANKERS.txt",
+                     "cheats/06-FIFO-IPC.txt", "cheats/08-DISK-SCHEDULING.txt"):
+            assert path in opened, path
+        output = run("bash", "windows/menu.sh", text="2a\nn\n3\n9 1 4\n\nq\n", env=environment)
+        assert "Sorted Array by Child: 1 4 9" in output
+        assert "Sorted Array by Parent: 1 4 9" in output
+        run("bash", "windows/menu.sh", text="", env=environment)
+    print("PASS practical menu: source and cheat opening, sample runs, custom input, and exit")
+
+
 if __name__ == "__main__":
     check_address_book()
     run("./run.sh", "1", "--demo")
@@ -186,4 +211,5 @@ if __name__ == "__main__":
     check_ipc()
     check_pipes()
     check_disk()
+    check_menu()
     print("All 13 programs passed.")
