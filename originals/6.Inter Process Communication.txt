@@ -1,0 +1,143 @@
+// nano process1.c
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+#include <sys/stat.h>
+
+#define FIFO1 "fifo1"
+#define FIFO2 "fifo2"
+
+int main()
+{
+    int fd1, fd2;
+    char msg[500];
+    char result[500] = {0};
+    int bytes;
+
+    mkfifo(FIFO1, 0666);
+    mkfifo(FIFO2, 0666);
+
+    printf("Enter a sentence:\n");
+    fgets(msg, sizeof(msg), stdin);
+
+    msg[strcspn(msg, "\n")] = '\0';
+
+    fd1 = open(FIFO1, O_WRONLY);
+    write(fd1, msg, strlen(msg) + 1);
+    close(fd1);
+
+    fd2 = open(FIFO2, O_RDONLY);
+    bytes = read(fd2, result, sizeof(result) - 1);
+
+    if(bytes > 0)
+        result[bytes] = '\0';
+
+    printf("\nOutput received from Process 2:\n");
+    printf("%s\n", result);
+
+    close(fd2);
+
+    return 0;
+}
+
+
+//nano process2.c
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+#include <ctype.h>
+
+#define FIFO1 "fifo1"
+#define FIFO2 "fifo2"
+
+int main()
+{
+    int fd1, fd2;
+    char msg[500] = {0};
+    char result[500] = {0};
+
+    int chars, words = 0, lines = 1;
+    int i, inWord = 0;
+    int bytes;
+
+    fd1 = open(FIFO1, O_RDONLY);
+    bytes = read(fd1, msg, sizeof(msg) - 1);
+
+    if(bytes > 0)
+        msg[bytes] = '\0';
+
+    close(fd1);
+
+    chars = strlen(msg);
+
+    for(i = 0; msg[i] != '\0'; i++)
+    {
+        if(isspace((unsigned char)msg[i]))
+        {
+            inWord = 0;
+        }
+        else if(inWord == 0)
+        {
+            words++;
+            inWord = 1;
+        }
+    }
+
+    FILE *fp = fopen("result.txt", "w");
+
+    if(fp == NULL)
+    {
+        perror("File error");
+        return 1;
+    }
+
+    fprintf(fp, "Number of Characters = %d\n", chars);
+    fprintf(fp, "Number of Words = %d\n", words);
+    fprintf(fp, "Number of Lines = %d\n", lines);
+
+    fclose(fp);
+
+    fp = fopen("result.txt", "r");
+
+    if(fp == NULL)
+    {
+        perror("File error");
+        return 1;
+    }
+
+    fread(result, sizeof(char), sizeof(result) - 1, fp);
+    fclose(fp);
+
+    fd2 = open(FIFO2, O_WRONLY);
+    write(fd2, result, strlen(result) + 1);
+    close(fd2);
+
+    return 0;
+}
+
+// gcc process1.c -o process1
+// gcc process2.c -o process2
+
+/* In the new Terminal, enter:
+cd ~/practical6
+You should now have two Terminal windows open.
+
+In Terminal 1:
+./process1
+Enter the sentence:
+Operating Systems laboratory experiment
+
+In Terminal 2:
+./process2
+
+Verify the result file
+In either Terminal:
+cat result.txt/

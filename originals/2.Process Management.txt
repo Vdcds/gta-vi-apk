@@ -1,0 +1,142 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+void bubbleSort(int arr[], int n)
+{
+    int i, j, temp;
+
+    for(i = 0; i < n - 1; i++)
+    {
+        for(j = 0; j < n - i - 1; j++)
+        {
+            if(arr[j] > arr[j + 1])
+            {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void printArray(int arr[], int n)
+{
+    int i;
+
+    for(i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+
+    printf("\n");
+}
+
+int main()
+{
+    int n, i;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    int arr[n];
+
+    printf("Enter elements:\n");
+
+    for(i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    pid_t pid = fork();
+
+    if(pid < 0)
+    {
+        printf("Fork Failed\n");
+        exit(1);
+    }
+    else if(pid == 0)
+    {
+        printf("\nCHILD PROCESS\n");
+
+        bubbleSort(arr, n);
+
+        printf("Sorted Array by Child: ");
+        printArray(arr, n);
+
+        printf("Child PID = %d\n", getpid());
+        printf("Parent PID = %d\n", getppid());
+    }
+    else
+    {
+        wait(NULL);
+
+        printf("\nPARENT PROCESS\n");
+
+        bubbleSort(arr, n);
+
+        printf("Sorted Array by Parent: ");
+        printArray(arr, n);
+
+        printf("Parent PID = %d\n", getpid());
+    }
+
+    return 0;
+}
+
+// zombie process
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main()
+{
+    pid_t pid = fork();
+
+    if(pid == 0)
+    {
+        printf("Child Process Terminated\n");
+        exit(0);
+    }
+    else
+    {
+        printf("Parent Sleeping...\n");
+        sleep(20);
+
+        printf("Parent Wakes Up\n");
+    }
+
+    return 0;
+}
+
+//open another terminal 
+
+ps -el | grep Z
+
+//orphan process
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main()
+{
+    pid_t pid = fork();
+
+    if(pid > 0)
+    {
+        printf("Parent Process Exiting\n");
+        exit(0);
+    }
+    else
+    {
+        sleep(10);
+
+        printf("Child Process Running\n");
+        printf("Child PID = %d\n", getpid());
+        printf("New Parent PID = %d\n", getppid());
+    }
+
+    return 0;
+}

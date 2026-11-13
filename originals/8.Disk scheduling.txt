@@ -1,0 +1,252 @@
+//sstf
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+int main()
+{
+    int n, head, i, j;
+    int total = 0;
+
+    printf("Enter number of requests: ");
+    scanf("%d", &n);
+
+    int req[n];
+    int visited[n];
+
+    printf("Enter request queue:\n");
+
+    for(i = 0; i < n; i++)
+    {
+        scanf("%d", &req[i]);
+        visited[i] = 0;
+    }
+
+    printf("Enter initial head position: ");
+    scanf("%d", &head);
+
+    printf("\nSeek Sequence: %d", head);
+
+    for(i = 0; i < n; i++)
+    {
+        int min = INT_MAX;
+        int index = -1;
+
+        for(j = 0; j < n; j++)
+        {
+            if(!visited[j] && abs(head - req[j]) < min)
+            {
+                min = abs(head - req[j]);
+                index = j;
+            }
+        }
+
+        visited[index] = 1;
+        total += abs(head - req[index]);
+        head = req[index];
+
+        printf(" -> %d", head);
+    }
+
+    printf("\nTotal Seek Operations = %d\n", total);
+    printf("Average Seek Length = %.2f\n", (float)total / n);
+
+    return 0;
+}
+
+/* Step 5. Compile
+gcc sstf.c -o sstf
+
+
+Step 6. Run
+./sstf
+
+
+Step 7. Enter the input
+9
+Step 8.
+55 58 39 18 90 160 150 38 184
+100
+*/
+
+// scan
+
+
+#include <stdio.h>
+
+int main()
+{
+    int n, head, i, j, temp;
+    int total = 0;
+    int disk_size = 200;
+
+    printf("Enter number of requests: ");
+    scanf("%d", &n);
+
+    int req[n];
+
+    printf("Enter request queue:\n");
+
+    for(i = 0; i < n; i++)
+        scanf("%d", &req[i]);
+
+    printf("Enter initial head position: ");
+    scanf("%d", &head);
+
+    /* Sort requests in ascending order */
+    for(i = 0; i < n - 1; i++)
+    {
+        for(j = 0; j < n - i - 1; j++)
+        {
+            if(req[j] > req[j + 1])
+            {
+                temp = req[j];
+                req[j] = req[j + 1];
+                req[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("\nSeek Sequence: %d", head);
+
+    /* Move towards higher track numbers */
+    for(i = 0; i < n; i++)
+    {
+        if(req[i] >= head)
+        {
+            total += req[i] - head;
+            head = req[i];
+            printf(" -> %d", head);
+        }
+    }
+
+    /* Move to the last track */
+    total += (disk_size - 1) - head;
+    head = disk_size - 1;
+    printf(" -> %d", head);
+
+    /* Reverse direction */
+    for(i = n - 1; i >= 0; i--)
+    {
+        if(req[i] < head)
+        {
+            total += head - req[i];
+            head = req[i];
+            printf(" -> %d", head);
+        }
+    }
+
+    printf("\nTotal Seek Operations = %d\n", total);
+    printf("Average Seek Length = %.2f\n", (float)total / n);
+
+    return 0;
+}
+
+/* Step 4. Compile
+gcc scan.c -o scan
+
+
+Step 5. Run
+./scan
+
+
+Step 6. Enter the input
+9
+
+55 58 39 18 90 160 150 38 184
+100 
+*/
+
+//c-look
+
+
+#include <stdio.h>
+
+int main()
+{
+    int n, head, i, j, temp;
+    int total = 0;
+    int start;
+
+    printf("Enter number of requests: ");
+    scanf("%d", &n);
+
+    int req[n];
+
+    printf("Enter request queue:\n");
+
+    for(i = 0; i < n; i++)
+        scanf("%d", &req[i]);
+
+    printf("Enter initial head position: ");
+    scanf("%d", &head);
+
+    /* Sort requests in ascending order */
+    for(i = 0; i < n - 1; i++)
+    {
+        for(j = 0; j < n - i - 1; j++)
+        {
+            if(req[j] > req[j + 1])
+            {
+                temp = req[j];
+                req[j] = req[j + 1];
+                req[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("\nSeek Sequence: %d", head);
+
+    /* Find first request greater than or equal to head */
+    for(start = 0; start < n; start++)
+    {
+        if(req[start] >= head)
+            break;
+    }
+
+    /* Service requests towards higher tracks */
+    for(i = start; i < n; i++)
+    {
+        total += req[i] - head;
+        head = req[i];
+        printf(" -> %d", head);
+    }
+
+    /* Jump to the lowest request */
+    if(start > 0)
+    {
+        total += head - req[0];
+        head = req[0];
+        printf(" -> %d", head);
+    }
+
+    /* Service remaining requests */
+    for(i = 1; i < start; i++)
+    {
+        total += req[i] - head;
+        head = req[i];
+        printf(" -> %d", head);
+    }
+
+    printf("\nTotal Seek Operations = %d\n", total);
+    printf("Average Seek Length = %.2f\n", (float)total / n);
+
+    return 0;
+}
+
+/*Step 4. Compile
+gcc clook.c -o clook
+
+
+Step 5. Run
+./clook
+
+
+Step 6. Enter the input
+9
+
+55 58 39 18 90 160 150 38 184
+100
+*/

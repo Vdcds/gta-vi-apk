@@ -1,0 +1,115 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <fcntl.h>
+
+int main()
+{
+    int pipe1[2], pipe2[2];
+    pid_t pid;
+
+    char filename[100];
+    char buffer[1024];
+    char filecontent[4096];
+
+    pipe(pipe1);
+    pipe(pipe2);
+
+    pid = fork();
+
+    if(pid < 0)
+    {
+        printf("Fork Failed\n");
+        exit(1);
+    }
+
+    /* Parent Process */
+    if(pid > 0)
+    {
+        close(pipe1[0]);
+        close(pipe2[1]);
+
+        printf("Enter file name: ");
+        scanf("%99s", filename);
+
+        write(pipe1[1], filename, strlen(filename) + 1);
+
+        read(pipe2[0], filecontent, sizeof(filecontent));
+
+        printf("\nContents of File:\n");
+        printf("%s\n", filecontent);
+
+        close(pipe1[1]);
+        close(pipe2[0]);
+
+        wait(NULL);
+    }
+
+    /* Child Process */
+    else
+    {
+        close(pipe1[1]);
+        close(pipe2[0]);
+
+        read(pipe1[0], filename, sizeof(filename));
+
+        FILE *fp = fopen(filename, "r");
+
+        if(fp == NULL)
+        {
+            strcpy(filecontent, "Error: Cannot open file.");
+        }
+        else
+        {
+            filecontent[0] = '\0';
+
+            while(fgets(buffer, sizeof(buffer), fp) != NULL)
+            {
+                strcat(filecontent, buffer);
+            }
+
+            fclose(fp);
+        }
+
+        write(pipe2[1], filecontent, strlen(filecontent) + 1);
+
+        close(pipe1[0]);
+        close(pipe2[1]);
+
+        exit(0);
+    }
+
+    return 0;
+}
+
+
+/* Compile the program
+gcc pipe_file.c -o pipe_file
+
+
+If no errors appear, compilation is successful.
+Step 6. Create a sample text file
+Enter:
+echo "Operating System Laboratory" > sample.txt
+
+
+Then:
+echo "IPC using Pipes" >> sample.txt
+
+
+Step 7. Check the text file
+cat sample.txt 
+
+Run the program
+./pipe_file
+
+It will ask:
+Enter file name:
+
+
+Enter:
+sample.txt*/
