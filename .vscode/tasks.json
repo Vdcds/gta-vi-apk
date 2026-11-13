@@ -5,11 +5,11 @@
       "label": "Run practical menu",
       "type": "process",
       "command": "bash",
-      "args": ["windows/menu.sh"],
+      "args": ["scripts/menu.sh"],
       "options": { "cwd": "${workspaceFolder}" },
       "windows": {
         "command": "wsl.exe",
-        "args": ["--distribution", "${input:wslDistro}", "--cd", "${workspaceFolder}", "--exec", "bash", "windows/menu.sh"]
+        "args": ["--distribution", "${input:wslDistro}", "--cd", "${workspaceFolder}", "--exec", "bash", "scripts/menu.sh"]
       },
       "group": { "kind": "build", "isDefault": true },
       "presentation": { "reveal": "always", "focus": true, "panel": "dedicated" },

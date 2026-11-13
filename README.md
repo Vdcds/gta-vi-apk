@@ -4,6 +4,18 @@ Operating systems lab programs from the eight attached practical files. Includes
 
 The original text files are preserved unchanged in [`originals/`](originals/). Runnable source files are in the numbered practical folders.
 
+## Start on Ubuntu
+
+Open a terminal in the extracted or cloned project folder and run:
+
+```bash
+bash UBUNTU-START.sh
+```
+
+The launcher copies the project to your Ubuntu Desktop, opens it in VS Code, and starts the practical menu. Choose an ID to open its source and `.txt` explanation, then press Enter for sample input. Programs compile and run directly on Ubuntu. Existing Desktop copies and edits are preserved.
+
+Install the compiler and VS Code once using [`cheats/00-UBUNTU-START.txt`](cheats/00-UBUNTU-START.txt). The launcher finds localized Desktop folders through `xdg-user-dir`. In VS Code, **Ctrl+Shift+B** runs the same menu in the integrated terminal. For a terminal-only session, run `bash scripts/menu.sh` from the project folder.
+
 ## Start on Windows
 
 Download the ZIP from **Code > Download ZIP**, extract it, then double-click `WINDOWS-START.cmd`.
@@ -148,7 +160,7 @@ make
 make test
 ```
 
-The checks run all 13 programs and check process states, synchronization output, safe and unsafe resource states, FIFO counts, large file transfer, disk seek sequences, and the practical menu. GitHub Actions runs these checks on Linux and macOS, and checks the Desktop copy logic and PowerShell syntax on Windows.
+The checks run all 13 programs and check process states, synchronization output, safe and unsafe resource states, FIFO counts, large file transfer, disk seek sequences, the practical menu, and the Ubuntu Desktop launcher. Editor commands use a test substitute during automated checks. GitHub Actions runs these checks on Linux and macOS, and checks the Desktop copy logic and PowerShell syntax on Windows.
 
 To remove compiled programs and generated FIFO results:
 

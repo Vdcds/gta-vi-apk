@@ -5,13 +5,13 @@ cd -- "$root"
 
 if ! command -v cc >/dev/null || ! command -v make >/dev/null; then
     cat <<'SETUP'
-The Desktop copy is ready. Install the compiler inside Ubuntu once:
+Install the compiler inside Ubuntu once:
 
   sudo apt update
   sudo apt install -y build-essential
 
-Then double-click WINDOWS-START.cmd again.
-Read cheats/00-WINDOWS-START.txt for the complete setup.
+Then restart UBUNTU-START.sh on Ubuntu or WINDOWS-START.cmd on Windows.
+Read cheats/00-UBUNTU-START.txt or cheats/00-WINDOWS-START.txt for setup.
 SETUP
     exit 1
 fi
@@ -40,7 +40,7 @@ while true; do
     printf '\n'
     cat "cheats/$sheet"
     printf '\n'
-    # In WSL, code opens the Windows VS Code installation with WSL support.
+    # The same command opens source and notes in native Ubuntu or WSL VS Code.
     if [[ ${OSLAB_SKIP_EDITOR:-0} != 1 ]] && command -v code >/dev/null; then
         code --reuse-window "$root" "${sources[@]}" "$root/cheats/$sheet" || true
     fi

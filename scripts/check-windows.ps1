@@ -21,7 +21,7 @@ try {
     $desktop = Join-Path $work 'OneDrive - College/Desktop'
     $first = Copy-LabToDesktop -SourceRoot $root -Desktop $desktop
     Assert-Lab ($first -eq (Join-Path $desktop 'gta-vi-apk')) 'Wrong initial Desktop destination.'
-    foreach ($file in @('run.sh', 'windows/start.ps1', 'windows/menu.sh',
+    foreach ($file in @('run.sh', 'windows/start.ps1', 'scripts/menu.sh',
                        '.vscode/tasks.json', 'common/sync.h', 'samples/bankers.in',
                        'cheats/00-WINDOWS-START.txt', 'cheats/08-DISK-SCHEDULING.txt')) {
         Assert-Lab (Test-Path -LiteralPath (Join-Path $first $file)) "Copy is missing $file"

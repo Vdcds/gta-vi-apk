@@ -37,7 +37,7 @@ try {
     }
     $linuxPath = ([string]$linuxPath).Trim()
     Write-Host "Opening the run menu in WSL $Distribution..."
-    & wsl.exe --distribution $Distribution --cd $linuxPath --exec bash windows/menu.sh
+    & wsl.exe --distribution $Distribution --cd $linuxPath --exec bash scripts/menu.sh
     exit $LASTEXITCODE
 } catch {
     Write-Host "`n$($_.Exception.Message)" -ForegroundColor Red

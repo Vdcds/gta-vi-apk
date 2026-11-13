@@ -1,0 +1,79 @@
+UBUNTU: COPY TO DESKTOP, OPEN VS CODE, RUN
+
+ONE-TIME SETUP
+
+Open an Ubuntu terminal and run:
+  sudo apt update
+  sudo apt install -y build-essential git xdg-user-dirs
+
+Install VS Code if it is missing:
+  sudo snap install code --classic
+
+Alternatively, install the official Ubuntu/Debian .deb package from:
+  https://code.visualstudio.com/download
+
+You do not need WSL on Ubuntu. Programs use the native Ubuntu C compiler.
+Python 3 is optional and only needed for make test.
+
+START FROM A DOWNLOADED ZIP
+
+1. Download the ZIP from GitHub (Code > Download ZIP) and extract it.
+2. Open the extracted project folder. Right-click an empty area and choose
+   Open in Terminal, or open a terminal and cd to the extracted folder.
+3. Run:
+     bash UBUNTU-START.sh
+
+START FROM A CLONE
+
+  git clone https://github.com/Vdcds/gta-vi-apk.git
+  cd gta-vi-apk
+  bash UBUNTU-START.sh
+
+WHAT HAPPENS
+
+- The launcher discovers your Desktop using xdg-user-dir DESKTOP, including
+  localized Desktop names. It falls back to ~/Desktop if none is configured.
+- The whole project is copied to Desktop/gta-vi-apk before opening or running.
+  Source files, shared headers, sample inputs, originals, and cheat sheets
+  stay together. Old binaries, .git, and addressbook.txt are not copied.
+- Existing Desktop copies and your edits are preserved. A new copy gets a
+  unique suffix. If you start a copy already on the Desktop, it reuses it.
+- VS Code opens the Desktop project. Review and trust your downloaded project
+  if VS Code asks. The practical menu appears in the launching terminal.
+- Choose an ID such as 5. Its source file and .txt cheat sheet open in VS Code.
+  Press Enter to use sample input, or type n to enter your own input.
+- The selected program compiles and runs from the Desktop copy. After the
+  output, press Enter for the menu. Type q to quit.
+
+RUN IN VS CODE'S INTEGRATED TERMINAL
+
+Open the Desktop project and press Ctrl+Shift+B for the same practical menu.
+Quit any other open menu before starting another one.
+
+To run an individual example in a terminal opened at the project folder:
+  bash run.sh 5 --demo
+  bash run.sh 6 --demo
+  bash run.sh 8b --demo
+
+You can run directly from the downloaded folder without copying, too:
+  bash scripts/menu.sh
+
+TROUBLESHOOTING
+
+- VS Code missing: install it, then rerun the launcher. Your copy is already
+  on the Desktop. You can launch that copy's UBUNTU-START.sh in a terminal.
+- cc or make missing: run the build-essential installation command above.
+- Cannot execute a shell file from a ZIP: use bash UBUNTU-START.sh, which
+  does not require the extracted script to have its executable bit set.
+- Double-clicking a .sh file may open an editor. Use the terminal command.
+- Run as your normal user, not with sudo. Use sudo only for package setup.
+- On a server with no graphical session, VS Code cannot open a desktop
+  window. Run bash scripts/menu.sh directly for terminal-only operation.
+- To choose a specific Desktop folder:
+    OSLAB_DESKTOP_DIR="$HOME/My Desktop" bash UBUNTU-START.sh
+
+The 01 through 08 text files in cheats/ explain every practical and include
+direct compile commands, expected output, and viva notes.
+
+Official VS Code installation instructions:
+https://code.visualstudio.com/docs/setup/linux
